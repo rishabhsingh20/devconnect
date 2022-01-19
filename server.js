@@ -1,38 +1,41 @@
-const express = require('express');
-const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
-const passport = require('passport');
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const passport = require("passport");
 
-const users = require('./routes/api/users');
-const profile = require('./routes/api/profile');
-const posts = require('./routes/api/posts');
+const users = require("./routes/api/users");
+const profile = require("./routes/api/profile");
+const posts = require("./routes/api/posts");
+
 const app = express();
 
-// body parser
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-//DB config
-const db = require('./config/keys').mongoURI;
+// DB Config
+const db = require("./config/keys").mongoURI;
 
-// connect to mongoose
+// Connect to MongoDB
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("mongo connected"))
-    .catch(err => console.log(err));
+  .connect(
+    db,
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.warn(err));
 
-// passport middleware
+// Passport middleware
 app.use(passport.initialize());
 
-// passoprt config
-require('./config/passport')(passport);
+// Passport Config
+require("./config/passport")(passport);
 
-// use route
-app.use('/api/users', users);
-app.use('/api/profile', profile);
-app.use('/api/posts', posts);
+// Use routes
+app.use("/api/users", users);
+app.use("/api/posts", posts);
+app.use("/api/profile", profile);
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log(`server runnig on port ${port}`));
-
+app.listen(port, () => console.log(`Server running on port ${port}`));
